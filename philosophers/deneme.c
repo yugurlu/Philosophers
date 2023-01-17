@@ -1,11 +1,32 @@
 
 #include "philo.h"
-#define ARRAY_SIZE 10
+#include <time.h>
 
-pthread_mutex_t mutex;
+pthread_mutex_t mutex, mutex2;
 int variable = 0;
+int counter = 0;
 
-int arr[] = {112, 434, 23, -22, 1, 3239, 0, -211, 583, 554};
+void *thread1_func(void *arg)
+{
+    while (1) {
+        pthread_mutex_lock(&mutex2);
+        counter++;
+        printf("Thread 1: Counter value: %d\n", counter);
+        pthread_mutex_unlock(&mutex2);
+    }
+    return NULL;
+}
+
+void *thread2_func(void *arg)
+{
+    while (1) {
+        pthread_mutex_lock(&mutex2);
+        counter--;
+        printf("Thread 2: Counter value: %d\n", counter);
+        pthread_mutex_unlock(&mutex2);
+    }
+    return NULL;
+}
 
 void	*function(void *arg)
 {
@@ -22,17 +43,11 @@ void	*function(void *arg)
 	return (NULL);
 }
 
-void 	*find_min(void *arg)
+void 	*deneme(void *arg)
 {
-	int i;
-
-	i = 0;
-	while (i < ARRAY_SIZE)
-	{
-		if(arr[i] < 0)
-
-	}
-
+	printf("işlem parçacığı başladı...\n");
+	usleep(1000000);
+	return (NULL);
 }
 
 void	*routine(void *arg)
@@ -83,20 +98,44 @@ int main()
 
 	//örnek program
 	pthread_t thread1;
+
+	pthread_create(&thread1, NULL, &deneme, NULL);
+	printf("işlem parçacığı oluşturuldu... ID = %p\n", thread1);
+	pthread_join(thread1, NULL);
+	pthread_detach(thread1);
+	printf("işlem parçacığı sonlandırıldı...\n");
+	printf("----------------------------------------\n");
+
+	//örnek program2
 	pthread_t thread2;
+	pthread_t thread3;
 
 	pthread_mutex_init(&mutex, NULL);
-	pthread_create(&thread1, NULL, function, NULL);
 	pthread_create(&thread2, NULL, function, NULL);
-	pthread_join(thread1, NULL);
+	pthread_create(&thread3, NULL, function, NULL);
+
 	pthread_join(thread2, NULL);
+	pthread_join(thread3, NULL);
 	printf("Variable = %d\n", variable);
 	pthread_mutex_destroy(&mutex);
+	printf("----------------------------------------\n");
 
-	//örnek program 2
-	pthread_t thread3;
-	pthread_t thread4;
+	//--------------------------------------------------------------------------------------------//
 
-	pthread_create(&thread3, NULL, find_min, NULL);
+	/*while(1) döngüsü ile sonsuza kadar çalışıcak iki fonksiyon aynı anda çalıştırılabilir ???
+	-çoklu işlemcilerin avantajları*/
+
+	pthread_t thread4, thread5;
+
+	pthread_mutex_init(&mutex2, NULL);
+
+    pthread_create(&thread4, NULL, thread1_func, NULL);
+    pthread_create(&thread5, NULL, thread2_func, NULL);
+
+    pthread_join(thread4, NULL);
+    pthread_join(thread5, NULL);
+
+    pthread_mutex_destroy(&mutex2);
+
 	return 0;
 }
