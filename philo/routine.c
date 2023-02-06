@@ -64,7 +64,7 @@ int	eating(t_data *data, int index)
 	data->philo[index].meals++;
 	data->philo[index].last_eat = get_time();
 	pthread_mutex_unlock(&data->write_mutex);
-	usleep(data->time_to_eat * 1000);
+	smart_sleep(data->time_to_eat);
 	pthread_mutex_unlock(&data->forks[index]);
 	pthread_mutex_unlock(&data->forks[(index + 1) % data->num_philo]);
 	return (0);
@@ -81,6 +81,6 @@ int	sleeping(t_data *data, int index)
 {
 	if (print_action(data, index, "is sleeping", BLUE) == 1)
 		return (1);
-	usleep(data->time_to_sleep * 1000);
+	smart_sleep(data->time_to_sleep);
 	return (0);
 }
