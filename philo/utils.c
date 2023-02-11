@@ -48,10 +48,10 @@ unsigned long	get_passed_time(unsigned long begin)
 
 void	smart_sleep(int time)
 {
-	unsigned long	begin;
+	unsigned long	time_zone;
 
-	begin = get_time();
-	while (get_passed_time(begin) <= (unsigned long)time)
+	time_zone = get_time() + time;
+	while (get_time() <= time_zone)
 		usleep(100);
 }
 
