@@ -6,7 +6,7 @@
 /*   By: yugurlu <yugurlu@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 11:40:41 by yugurlu           #+#    #+#             */
-/*   Updated: 2023/02/12 13:17:43 by yugurlu          ###   ########.fr       */
+/*   Updated: 2023/05/03 23:36:13 by yugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	*dead(void *void_data)
 		i = 0;
 		if (!is_dead(data) || !all_philos_eat(data))
 			break ;
+		if(data->philo[i].meals == data->num_must_eat)
+			continue;
 		while (i < data->num_philo)
 		{
 			if (!all_philos_eat(data) || philo_dead(data, i))
