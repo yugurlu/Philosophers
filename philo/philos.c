@@ -6,11 +6,23 @@
 /*   By: yugurlu <yugurlu@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 11:40:41 by yugurlu           #+#    #+#             */
-/*   Updated: 2023/05/03 23:36:13 by yugurlu          ###   ########.fr       */
+/*   Updated: 2023/05/03 23:52:05 by yugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	meal(t_data *data, int index)
+{
+	pthread_mutex_lock(&data->write_mutex);
+	if (data->philo[index].meals == data->num_must_eat)
+	{
+		pthread_mutex_unlock(&data->write_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&data->write_mutex);
+	return (0);
+}
 
 void	philo_init(t_data *data)
 {
@@ -36,9 +48,8 @@ void	*one_philo(void *void_data)
 	data = (t_data *)void_data;
 	print_action(data, 0, "has taken a fork", BLUE);
 	smart_sleep(data->time_to_die);
-	printf("%s%-10lu   %d %s\n", RED,
-		get_passed_time(data->start_time), data->philo[0].philo_id,
-		"died");
+	printf("%s%-10lu   %d %s\n", RED, get_passed_time(data->start_time),
+		data->philo[0].philo_id, "died");
 	return (NULL);
 }
 
@@ -71,8 +82,8 @@ void	*dead(void *void_data)
 		i = 0;
 		if (!is_dead(data) || !all_philos_eat(data))
 			break ;
-		if(data->philo[i].meals == data->num_must_eat)
-			continue;
+		if (meal(data, i))
+			continue ;
 		while (i < data->num_philo)
 		{
 			if (!all_philos_eat(data) || philo_dead(data, i))
