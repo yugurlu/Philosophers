@@ -1,4 +1,7 @@
 # Philosophers
+
+# This project is a training to multi-threads/multi-process programming with the use of mutex.
+
 The philosophers problem
 
 This problem states that N philosophers seated around a circular table with one fork between each pair of philosophers. A philosopher may eat if he can pick up the two forks adjacent to him. One fork may be picked up by any one of its adjacent followers but not both.
